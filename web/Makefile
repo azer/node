@@ -1,0 +1,2 @@
+all:
+	jsbuild package.json

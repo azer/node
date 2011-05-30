@@ -1,0 +1,10 @@
+{
+  "name":"node-library",
+  "version":"1.0.0",
+  "build":{
+    "dir":"../lib",
+    "files":[
+      "*.js"
+    ]
+  }
+}

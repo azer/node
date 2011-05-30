@@ -1,0 +1,12 @@
+{
+  "name":"node",
+  "version":"1.0.0",
+  "build":{
+    "filename":"node.js",
+    "main":"process.js",
+    "files":[
+      "lib.json",
+      "process.js"
+    ]
+  }
+}
