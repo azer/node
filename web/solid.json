@@ -3,9 +3,8 @@
   "version":"1.0.0",
   "build":{
     "filename":"node.js",
-    "main":"process.js",
     "files":[
-      "lib.json",
+      "working_modules.json",
       "ext.json"
     ]
   }

@@ -1,0 +1,17 @@
+
+{
+  "name":"node-web-working-modules",
+  "version":"1.0.0",
+  "build":{
+    "dir":"../lib",
+    "files":[
+      "assert.js",
+      "events.js",
+      "freelist.js",
+      "path.js",
+      "string_decoder.js",
+      "url.js",
+      "util.js"
+    ]
+  }
+}

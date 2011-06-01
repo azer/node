@@ -1,12 +1,10 @@
 {
-  "name":"node",
+  "name":"node-web-extensions",
   "version":"1.0.0",
   "build":{
-    "filename":"node.js",
     "main":"process.js",
     "files":[
-      "lib.json",
-      "ext.json"
+      "process.js"
     ]
   }
 }

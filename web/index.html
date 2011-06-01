@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>NodeJs Library In Client-Side</title>
+    <script src="node.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" src="https://getfirebug.com/firebug-lite.js">
+    </script>
+  </head>
+  <body>
+    <h1>NodeJs Library In Client-Side</h1>
+    This page demonstrates client-side usage of some of the modules in NodeJS
+    library.
+
+    <h3>Why?</h3>
+    NodeJS' library contains some modules (e.g assert) that we need to use in
+    client-side, also. I especially want to use crypto module in client-side
+    and will give a try to <a
+    href="https://github.com/kripken/emscripten">emscripten</a> this week.
+
+    <h3>Download</h3>
+    <ul>
+      <li><a href="node.js">node.js</a></li>
+      <li><a href="http://github.com/azer/node/tree/master/web">Browse the Source Code</a></li>
+    </ul>
+
+    <h3>How It Works?</h3>
+    <p>
+    The only difference between the backend platforms CommonJS designed for and
+    client-side environments is that web browsers don't provide no
+    module/package mechanism.
+    </p>
+
+    <p>
+    In brief, browsers are able to take the goodness of CommonJS that defines a
+    well designed module and package mechanism for JavaScript. Only thing we
+    need to do is to change <a
+    href="http://duckduckgo.com/?q=javascript%20module%20patterns">the module
+    patterns we used to code</a>.
+    </p>
+    
+    <p>
+    To make this example, I used <a href="http://jsbuild.kodfabrik.com">JSBuild</a> to
+    generate the wrapper code and combine the files.
+    </p>
+
+    Check out the below example using Firebug Lite window.
+
+    <h3>Available Modules:</h3>
+    <ul id="modules">
+      <li>assert</li>
+      <li>freelist</li>
+      <li>path</li>
+      <li>string_decoder</li>
+      <li>url</li>
+      <li>util</li>
+    </ul>
+
+    <h3>Try It</h3>
+    <div>
+      Open your console (see the Firebug Lite logo on right bottom) and call the available modules listed above. Here is an example usage;
+      <pre>
+        > var assert = node.require('assert');
+        > assert.equals('foo', [3,1,4]);
+        AssertionError: AssertionError: [3,1,4] == 'foo'
+      </pre>
+    </div>
+
+    <h3> Contact</h3>
+    <ul>
+      <li><a href="http://github.com/azer">Azer Koculu</a> &lt;<a href="http://twitter.com/4zjs">@4zjs</a>&gt;</li>
+    </ul>
+
+  </body>
+</html>
