@@ -5,9 +5,9 @@ access it with `require('assert')`.
 
 ### assert.fail(actual, expected, message, operator)
 
-Tests if `actual` is equal to `expected` using the operator provided.
+Throws an exception that displays the values for `actual` and `expected` separated by the provided operator.
 
-### assert.ok(value, [message])
+### assert(value, message), assert.ok(value, [message])
 
 Tests if value is a `true` value, it is equivalent to `assert.equal(true, value, message);`
 

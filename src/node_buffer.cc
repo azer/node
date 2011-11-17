@@ -30,8 +30,7 @@
 #include <string.h> // memcpy
 
 #ifdef __MINGW32__
-# include <platform.h>
-# include <platform_win32_winsock.h> // htons, htonl
+# include "platform.h"
 #endif
 
 #ifdef __POSIX__
@@ -470,7 +469,15 @@ Handle<Value> Buffer::Utf8Write(const Arguments &args) {
 
   size_t offset = args[1]->Uint32Value();
 
-  if (s->Length() > 0 && offset >= buffer->length_) {
+  int length = s->Length();
+
+  if (length == 0) {
+    constructor_template->GetFunction()->Set(chars_written_sym,
+                                             Integer::New(0));
+    return scope.Close(Integer::New(0));
+  }
+
+  if (length > 0 && offset >= buffer->length_) {
     return ThrowException(Exception::TypeError(String::New(
             "Offset is out of bounds")));
   }
@@ -486,12 +493,11 @@ Handle<Value> Buffer::Utf8Write(const Arguments &args) {
   int written = s->WriteUtf8(p,
                              max_length,
                              &char_written,
-                             String::HINT_MANY_WRITES_EXPECTED);
+                             (String::HINT_MANY_WRITES_EXPECTED |
+                              String::NO_NULL_TERMINATION));
 
   constructor_template->GetFunction()->Set(chars_written_sym,
                                            Integer::New(char_written));
-
-  if (written > 0 && p[written-1] == '\0') written--;
 
   return scope.Close(Integer::New(written));
 }
@@ -525,7 +531,8 @@ Handle<Value> Buffer::Ucs2Write(const Arguments &args) {
   int written = s->Write(p,
                          0,
                          max_length,
-                         String::HINT_MANY_WRITES_EXPECTED);
+                         (String::HINT_MANY_WRITES_EXPECTED |
+                          String::NO_NULL_TERMINATION));
 
   constructor_template->GetFunction()->Set(chars_written_sym,
                                            Integer::New(written));
@@ -563,7 +570,12 @@ Handle<Value> Buffer::AsciiWrite(const Arguments &args) {
   int written = s->WriteAscii(p,
                               0,
                               max_length,
-                              String::HINT_MANY_WRITES_EXPECTED);
+                              (String::HINT_MANY_WRITES_EXPECTED |
+                               String::NO_NULL_TERMINATION));
+
+  constructor_template->GetFunction()->Set(chars_written_sym,
+                                           Integer::New(written));
+
   return scope.Close(Integer::New(written));
 }
 
@@ -651,6 +663,9 @@ Handle<Value> Buffer::Base64Write(const Arguments &args) {
     *dst++ = ((c & 0x03) << 6) | (d & 0x3F);
   }
 
+  constructor_template->GetFunction()->Set(chars_written_sym,
+                                           Integer::New(s.length()));
+
   return scope.Close(Integer::New(dst - start));
 }
 
@@ -676,9 +691,15 @@ Handle<Value> Buffer::BinaryWrite(const Arguments &args) {
 
   char *p = (char*)buffer->data_ + offset;
 
-  size_t towrite = MIN((unsigned long) s->Length(), buffer->length_ - offset);
+  size_t max_length = args[2]->IsUndefined() ? buffer->length_ - offset
+                                             : args[2]->Uint32Value();
+  max_length = MIN(s->Length(), MIN(buffer->length_ - offset, max_length));
 
-  int written = DecodeWrite(p, towrite, s, BINARY);
+  int written = DecodeWrite(p, max_length, s, BINARY);
+
+  constructor_template->GetFunction()->Set(chars_written_sym,
+                                           Integer::New(written));
+
   return scope.Close(Integer::New(written));
 }
 
@@ -776,4 +797,4 @@ void Buffer::Initialize(Handle<Object> target) {
 
 }  // namespace node
 
-NODE_MODULE(node_buffer, node::Buffer::Initialize);
+NODE_MODULE(node_buffer, node::Buffer::Initialize)

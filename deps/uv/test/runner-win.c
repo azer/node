@@ -47,10 +47,12 @@ void platform_init(int argc, char **argv) {
   /* Disable stdio output buffering. */
   setvbuf(stdout, NULL, _IONBF, 0);
   setvbuf(stderr, NULL, _IONBF, 0);
+
+  strcpy(executable_path, argv[0]);
 }
 
 
-int process_start(char *name, process_info_t *p) {
+int process_start(char *name, char *part, process_info_t *p) {
   HANDLE file = INVALID_HANDLE_VALUE;
   HANDLE nul = INVALID_HANDLE_VALUE;
   WCHAR path[MAX_PATH], filename[MAX_PATH];
@@ -95,12 +97,24 @@ int process_start(char *name, process_info_t *p) {
   if (result == 0 || result == sizeof(image))
     goto error;
 
-  if (_snwprintf((wchar_t*)&args,
-                 sizeof(args) / sizeof(wchar_t),
-                 L"\"%s\" %S",
-                 image,
-                 name) < 0)
-    goto error;
+  if (part) {
+    if (_snwprintf((wchar_t*)args,
+                   sizeof(args) / sizeof(wchar_t),
+                   L"\"%s\" %S %S",
+                   image,
+                   name,
+                   part) < 0) {
+      goto error;
+    }
+  } else {
+    if (_snwprintf((wchar_t*)args,
+                   sizeof(args) / sizeof(wchar_t),
+                   L"\"%s\" %S",
+                   image,
+                   name) < 0) {
+      goto error;
+    }
+  }
 
   memset((void*)&si, 0, sizeof(si));
   si.cb = sizeof(si);
